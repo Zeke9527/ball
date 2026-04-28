@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>6 格點擊計數器</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -28,10 +30,21 @@
     }
 
     h1 {
-      margin: 0 0 16px;
+      margin: 0 0 12px;
       text-align: center;
       font-size: 24px;
       color: #222;
+    }
+
+    .total {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .grid {
@@ -48,17 +61,33 @@
       border-radius: 18px;
       background: white;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-      font-size: 48px;
-      font-weight: 700;
       color: #222;
       cursor: pointer;
       touch-action: manipulation;
       transition: transform 0.08s ease, background 0.15s ease;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .cell:active {
       transform: scale(0.96);
       background: #eaf3ff;
+    }
+
+    .count {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .rate {
+      font-size: 16px;
+      font-weight: 600;
+      color: #666;
     }
 
     .reset {
@@ -79,17 +108,45 @@
     }
   </style>
 </head>
+
 <body>
   <main class="app">
     <h1>點擊計數器</h1>
 
+    <div class="total">
+      總點擊次數：<span id="totalCount">0</span>
+    </div>
+
     <section class="grid" aria-label="六格計數器">
-      <button class="cell" type="button">0</button>
-      <button class="cell" type="button">0</button>
-      <button class="cell" type="button">0</button>
-      <button class="cell" type="button">0</button>
-      <button class="cell" type="button">0</button>
-      <button class="cell" type="button">0</button>
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
+
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
+
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
+
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
+
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
+
+      <button class="cell" type="button">
+        <span class="count">0</span>
+        <span class="rate">0%</span>
+      </button>
     </section>
 
     <button class="reset" type="button">全部歸零</button>
@@ -98,19 +155,41 @@
   <script>
     const cells = document.querySelectorAll(".cell");
     const resetButton = document.querySelector(".reset");
+    const totalCountText = document.querySelector("#totalCount");
 
-    cells.forEach((cell) => {
+    const counts = Array(cells.length).fill(0);
+    let totalCount = 0;
+
+    function updateDisplay() {
+      totalCountText.textContent = totalCount;
+
+      cells.forEach((cell, index) => {
+        const countText = cell.querySelector(".count");
+        const rateText = cell.querySelector(".rate");
+
+        const rate = totalCount === 0
+          ? 0
+          : (counts[index] / totalCount) * 100;
+
+        countText.textContent = counts[index];
+        rateText.textContent = `${rate.toFixed(1)}%`;
+      });
+    }
+
+    cells.forEach((cell, index) => {
       cell.addEventListener("click", () => {
-        const currentValue = Number(cell.textContent);
-        cell.textContent = currentValue + 1;
+        counts[index] += 1;
+        totalCount += 1;
+        updateDisplay();
       });
     });
 
     resetButton.addEventListener("click", () => {
-      cells.forEach((cell) => {
-        cell.textContent = "0";
-      });
+      counts.fill(0);
+      totalCount = 0;
+      updateDisplay();
     });
   </script>
 </body>
+
 </html>
