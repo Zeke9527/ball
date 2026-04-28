@@ -13,7 +13,8 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
       background: #f4f6f8;
       display: flex;
       align-items: center;
@@ -93,4 +94,23 @@
 
     <button class="reset" type="button">全部歸零</button>
   </main>
+
+  <script>
+    const cells = document.querySelectorAll(".cell");
+    const resetButton = document.querySelector(".reset");
+
+    cells.forEach((cell) => {
+      cell.addEventListener("click", () => {
+        const currentValue = Number(cell.textContent);
+        cell.textContent = currentValue + 1;
+      });
+    });
+
+    resetButton.addEventListener("click", () => {
+      cells.forEach((cell) => {
+        cell.textContent = "0";
+      });
+    });
+  </script>
+</body>
 </html>
