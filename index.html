@@ -29,6 +29,25 @@
       max-width: 430px;
     }
 
+    .ship-box {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      border: none;
+      background: #ff9800;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    .ship-box:active {
+      transform: scale(0.95);
+    }
+
     h1 {
       margin: 0 0 12px;
       text-align: center;
@@ -110,6 +129,10 @@
 </head>
 
 <body>
+  <button class="ship-box" type="button">
+    出貨：<span id="shipCount">0</span>
+  </button>
+
   <main class="app">
     <h1>點擊計數器</h1>
 
@@ -156,12 +179,16 @@
     const cells = document.querySelectorAll(".cell");
     const resetButton = document.querySelector(".reset");
     const totalCountText = document.querySelector("#totalCount");
+    const shipButton = document.querySelector(".ship-box");
+    const shipCountText = document.querySelector("#shipCount");
 
     const counts = Array(cells.length).fill(0);
     let totalCount = 0;
+    let shipCount = 0;
 
     function updateDisplay() {
       totalCountText.textContent = totalCount;
+      shipCountText.textContent = shipCount;
 
       cells.forEach((cell, index) => {
         const countText = cell.querySelector(".count");
@@ -184,9 +211,15 @@
       });
     });
 
+    shipButton.addEventListener("click", () => {
+      shipCount += 1;
+      updateDisplay();
+    });
+
     resetButton.addEventListener("click", () => {
       counts.fill(0);
       totalCount = 0;
+      shipCount = 0;
       updateDisplay();
     });
   </script>
