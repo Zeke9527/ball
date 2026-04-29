@@ -42,6 +42,9 @@
       font-weight: 700;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .ship-box:active {
@@ -129,100 +132,96 @@
 </head>
 
 <body>
+
+  <!-- 出貨按鈕 -->
   <button class="ship-box" type="button">
     出貨：<span id="shipCount">0</span>
+    <span id="shipRate">0%</span>
   </button>
 
   <main class="app">
     <h1>點擊計數器</h1>
 
     <div class="total">
-      總點擊次數：<span id="totalCount">0</span>
+      總次數：<span id="totalCount">0</span>
     </div>
 
-    <section class="grid" aria-label="六格計數器">
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
-
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
-
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
-
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
-
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
-
-      <button class="cell" type="button">
-        <span class="count">0</span>
-        <span class="rate">0%</span>
-      </button>
+    <section class="grid">
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
+      <button class="cell"><span class="count">0</span><span class="rate">0%</span></button>
     </section>
 
-    <button class="reset" type="button">全部歸零</button>
+    <button class="reset">全部歸零</button>
   </main>
 
   <script>
     const cells = document.querySelectorAll(".cell");
     const resetButton = document.querySelector(".reset");
     const totalCountText = document.querySelector("#totalCount");
+
     const shipButton = document.querySelector(".ship-box");
     const shipCountText = document.querySelector("#shipCount");
+    const shipRateText = document.querySelector("#shipRate");
 
     const counts = Array(cells.length).fill(0);
-    let totalCount = 0;
+
+    let totalClick = 0;
     let shipCount = 0;
 
     function updateDisplay() {
-      totalCountText.textContent = totalCount;
+      const grandTotal = totalClick + shipCount;
+
+      totalCountText.textContent = grandTotal;
       shipCountText.textContent = shipCount;
 
+      // 出貨機率
+      const shipRate = grandTotal === 0
+        ? 0
+        : (shipCount / grandTotal) * 100;
+
+      shipRateText.textContent = `${shipRate.toFixed(1)}%`;
+
+      // 每格機率
       cells.forEach((cell, index) => {
         const countText = cell.querySelector(".count");
         const rateText = cell.querySelector(".rate");
 
-        const rate = totalCount === 0
+        const rate = grandTotal === 0
           ? 0
-          : (counts[index] / totalCount) * 100;
+          : (counts[index] / grandTotal) * 100;
 
         countText.textContent = counts[index];
         rateText.textContent = `${rate.toFixed(1)}%`;
       });
     }
 
+    // 點擊格子
     cells.forEach((cell, index) => {
       cell.addEventListener("click", () => {
-        counts[index] += 1;
-        totalCount += 1;
+        counts[index]++;
+        totalClick++;
         updateDisplay();
       });
     });
 
+    // 出貨
     shipButton.addEventListener("click", () => {
-      shipCount += 1;
+      shipCount++;
       updateDisplay();
     });
 
+    // 重置
     resetButton.addEventListener("click", () => {
       counts.fill(0);
-      totalCount = 0;
+      totalClick = 0;
       shipCount = 0;
       updateDisplay();
     });
   </script>
-</body>
 
+</body>
 </html>
